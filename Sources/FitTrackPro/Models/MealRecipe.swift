@@ -6,7 +6,7 @@ import SwiftData
 public final class MealRecipe {
     public var name: String
     public var createdAt: Date
-    /// When non-nil, this meal counts toward intake on that calendar day (local timezone).
+    /// When loggedOn contains a Date, this meal counts toward intake on that calendar day (local timezone).
     public var loggedOn: Date?
     @Relationship(deleteRule: .cascade, inverse: \MealLineItem.meal)
     public var lineItems: [MealLineItem]
