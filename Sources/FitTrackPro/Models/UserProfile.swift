@@ -5,9 +5,9 @@ import SwiftData
 public final class UserProfile {
     public var fullName: String
     public var age: Int
-    /// Canonical weight in kilograms.
+    /// Weight in kilograms.
     public var weightKg: Double
-    /// Canonical height in centimeters.
+    /// Height in centimeters.
     public var heightCm: Double
     /// Backing storage for `FitnessGoal`.
     public var fitnessGoalRaw: String

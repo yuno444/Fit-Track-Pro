@@ -1,9 +1,7 @@
 # Fit-Track-Pro
 CSE 4550: Software Engineering
 
-## React Native prototype (Expo)
-
-A cross-platform prototype now lives in `mobile/` with:
+## React Native prototype (Expo). Contains:
 
 - Login screen (email + password)
 - Local session persistence with AsyncStorage
@@ -14,12 +12,12 @@ A cross-platform prototype now lives in `mobile/` with:
 ### Run steps
 
 1. Install Node.js LTS (if not already installed): [https://nodejs.org/](https://nodejs.org/)
-2. Open a terminal in this folder:
-   - `cd "c:\Users\Owner\OneDrive\Documents\Cursor Projects\Fit-Track-Pro\mobile"`
-3. Install dependencies:
+2. Open a terminal in the folder that contains Fit-Track-Pro\mobile, e.g.:
+   - `cd "c:\Users\Owner\Documents\Cursor Projects\Fit-Track-Pro\mobile"`
+3. Install dependencies in terminal:
    - `npm install`
    - `npx expo install --fix`
-4. Start Expo:
+4. Start Expo to view the app:
    - `npx expo start --clear`
 5. Preview on phone:
    - Install **Expo Go** on iPhone/Android

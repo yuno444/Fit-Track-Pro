@@ -1,6 +1,6 @@
 # User profile: fields and enums
 
-Aligned with the Profile screen mockup (name, age, weight, height, fitness goal, activity level).
+Aligned with the Profile screen diagram found in the example diagrams folder (name, age, weight, height, fitness goal, activity level).
 
 ## Fields
 
@@ -12,8 +12,6 @@ Aligned with the Profile screen mockup (name, age, weight, height, fitness goal,
 | `heightCm` | `Double` | Canonical storage in centimeters; UI may show ft/in via conversion. |
 | `fitnessGoal` | `FitnessGoal` | Enum; persisted as stable raw value (see below). |
 | `activityLevel` | `ActivityLevel` | Enum; used for TDEE/BMR-style targets when that feature is added. |
-
-Optional future fields (not required for v1 UI): unit preferences, sex at birth for certain BMR formulas, target weight.
 
 ## Enums
 
