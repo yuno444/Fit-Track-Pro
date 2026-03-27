@@ -34,7 +34,3 @@ Optional future fields (not required for v1 UI): unit preferences, sex at birth 
 | `moderate` | Moderate (3–5 days/week) |
 | `active` | Active (6–7 days/week) |
 | `veryActive` | Very active (physical job or training 2×/day) |
-
-## Source of truth
-
-Swift definitions: `Sources/FitTrackPro/Models/FitnessGoal.swift`, `ActivityLevel.swift`, `UserProfile.swift` in the `FitTrackPro` package.
