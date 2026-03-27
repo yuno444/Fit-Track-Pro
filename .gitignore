@@ -1,0 +1,17 @@
+# Swift / Xcode
+.build/
+.swiftpm/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
+*.moved-aside
+
+# macOS
+.DS_Store
+
+# Expo / React Native (mobile/)
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/npm-debug.*
+mobile/*.log
