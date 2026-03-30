@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import { AuthNavigator } from "./src/navigation/AuthNavigator";
-import { MainTabNavigator } from "./src/navigation/MainTabNavigator";
+import { MainStackNavigator } from "./src/navigation/MainStackNavigator";
 
 function RootNavigator() {
   const { isHydrating, isLoggedIn } = useAuth();
@@ -17,7 +17,7 @@ function RootNavigator() {
     );
   }
 
-  return isLoggedIn ? <MainTabNavigator /> : <AuthNavigator />;
+  return isLoggedIn ? <MainStackNavigator /> : <AuthNavigator />;
 }
 
 export default function App() {

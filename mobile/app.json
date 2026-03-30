@@ -15,6 +15,9 @@
       "adaptiveIcon": {
         "backgroundColor": "#1D4ED8"
       }
-    }
+    },
+    "plugins": [
+      "@react-native-community/datetimepicker"
+    ]
   }
 }

@@ -2,9 +2,11 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DashboardScreen } from "../screens/DashboardScreen";
 import { ProfileScreen } from "../screens/ProfileScreen";
-import { PlaceholderScreen } from "../screens/PlaceholderScreen";
+import { RecipesScreen } from "../screens/RecipesScreen";
+import { WorkoutsScreen } from "../screens/WorkoutsScreen";
+import type { MainTabsParamList } from "./types";
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<MainTabsParamList>();
 
 export function MainTabNavigator() {
   return (
@@ -16,14 +18,8 @@ export function MainTabNavigator() {
       }}
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen
-        name="Workouts"
-        children={() => <PlaceholderScreen title="Workouts" subtitle="Coming soon in the next iteration." />}
-      />
-      <Tab.Screen
-        name="Recipes"
-        children={() => <PlaceholderScreen title="Recipes" subtitle="Coming soon in the next iteration." />}
-      />
+      <Tab.Screen name="Workouts" component={WorkoutsScreen} />
+      <Tab.Screen name="Recipes" component={RecipesScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

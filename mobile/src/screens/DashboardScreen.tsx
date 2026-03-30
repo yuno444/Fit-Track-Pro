@@ -1,14 +1,55 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import type { CompositeNavigationProp } from "@react-navigation/native";
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { getWorkouts } from "../services/storage";
+import type { MainStackParamList, MainTabsParamList } from "../navigation/types";
+import { computeWeekStats } from "../utils/workoutStats";
 
-const cards = [
-  { label: "Workouts this week", value: "0", color: "#2563EB" },
-  { label: "Calories burned", value: "0", color: "#EA580C" },
-  { label: "Avg per workout", value: "0", color: "#16A34A" },
-  { label: "Total minutes", value: "0", color: "#9333EA" },
-];
+type DashboardNav = CompositeNavigationProp<
+  BottomTabNavigationProp<MainTabsParamList, "Dashboard">,
+  NativeStackNavigationProp<MainStackParamList>
+>;
 
 export function DashboardScreen() {
+  const navigation = useNavigation<DashboardNav>();
+  const [workoutsThisWeekCount, setWorkoutsThisWeekCount] = useState(0);
+  const [totalCalories, setTotalCalories] = useState(0);
+  const [avgPerWorkout, setAvgPerWorkout] = useState(0);
+  const [totalMinutes, setTotalMinutes] = useState(0);
+
+  const refreshStats = useCallback(async () => {
+    const all = await getWorkouts();
+    const s = computeWeekStats(all);
+    setWorkoutsThisWeekCount(s.count);
+    setTotalCalories(Math.round(s.totalCalories));
+    setAvgPerWorkout(s.avgCaloriesPerWorkout);
+    setTotalMinutes(Math.round(s.totalMinutes));
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      refreshStats();
+    }, [refreshStats])
+  );
+
+  const cards = [
+    { label: "Workouts this week", value: String(workoutsThisWeekCount), color: "#2563EB" },
+    { label: "Calories burned", value: String(totalCalories), color: "#EA580C" },
+    { label: "Avg per workout", value: String(avgPerWorkout), color: "#16A34A" },
+    { label: "Total minutes", value: String(totalMinutes), color: "#9333EA" },
+  ];
+
+  function openLogWorkout() {
+    navigation.navigate("LogWorkout");
+  }
+
+  function openLogMeal() {
+    navigation.navigate("LogMeal");
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -31,8 +72,12 @@ export function DashboardScreen() {
           ))}
         </View>
 
-        <Pressable style={styles.actionButton}>
+        <Pressable style={styles.actionButton} onPress={openLogWorkout}>
           <Text style={styles.actionText}>+ Log New Workout</Text>
+        </Pressable>
+
+        <Pressable style={styles.mealButton} onPress={openLogMeal}>
+          <Text style={styles.mealButtonText}>+ Add a Meal</Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
@@ -110,6 +155,21 @@ const styles = StyleSheet.create({
   },
   actionText: {
     color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 18,
+  },
+  mealButton: {
+    marginTop: 10,
+    marginHorizontal: 16,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#1D4ED8",
+  },
+  mealButtonText: {
+    color: "#1D4ED8",
     fontWeight: "700",
     fontSize: 18,
   },
