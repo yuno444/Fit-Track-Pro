@@ -13,8 +13,12 @@ export type ActivityLevel = (typeof ACTIVITY_LEVELS)[number];
 export type ProfileData = {
   fullName: string;
   age: string;
-  weightKg: string;
-  heightCm: string;
+  /** Body weight in pounds (user input string). */
+  weightLb: string;
+  /** Height: feet part (whole number as string). */
+  heightFeet: string;
+  /** Height: inches part (typically 0–11 as string). */
+  heightInches: string;
   fitnessGoal: FitnessGoal;
   activityLevel: ActivityLevel;
 };
@@ -22,8 +26,9 @@ export type ProfileData = {
 export const defaultProfile: ProfileData = {
   fullName: "",
   age: "",
-  weightKg: "",
-  heightCm: "",
+  weightLb: "",
+  heightFeet: "",
+  heightInches: "",
   fitnessGoal: "Lose Weight",
   activityLevel: "Sedentary (little or no exercise)",
 };

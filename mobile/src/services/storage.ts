@@ -1,51 +1,20 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getSession } from "./sessionStorage";
+import { mealsKey, profileKey, workoutsKey } from "./storageScope";
 import { ProfileData, defaultProfile } from "../types/profile";
+import { migrateProfileFromStorage } from "../utils/profileImperialMigration";
 import type { WorkoutEntry, WorkoutType } from "../types/workout";
 import type { MealEntry } from "../types/meal";
 
-const SESSION_KEY = "@fittrack/session";
-const PROFILE_KEY = "@fittrack/profile";
-const WORKOUTS_KEY = "@fittrack/workouts"; // The identifier for the list of workouts in the device's local storage
-const MEALS_KEY = "@fittrack/meals";
+export { runStorageMigrationV2 } from "./storageScope";
 
-export type SessionData = {
-  isLoggedIn: boolean;
-  email: string;
-};
-
-export async function saveSession(session: SessionData): Promise<void> {
-  await AsyncStorage.setItem(SESSION_KEY, JSON.stringify(session));
+export async function requireUserId(): Promise<string | null> {
+  const s = await getSession();
+  return s?.userId ?? null;
 }
 
-export async function getSession(): Promise<SessionData | null> {
-  const raw = await AsyncStorage.getItem(SESSION_KEY);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as SessionData;
-  } catch {
-    return null;
-  }
-}
+export const getActiveUserId = requireUserId;
 
-export async function clearSession(): Promise<void> {
-  await AsyncStorage.removeItem(SESSION_KEY);
-}
-
-export async function saveProfile(profile: ProfileData): Promise<void> {
-  await AsyncStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-}
-
-export async function getProfile(): Promise<ProfileData> {
-  const raw = await AsyncStorage.getItem(PROFILE_KEY);
-  if (!raw) return defaultProfile;
-  try {
-    return { ...defaultProfile, ...(JSON.parse(raw) as ProfileData) };
-  } catch {
-    return defaultProfile;
-  }
-}
-
-// Normalizes the workout type to ensure it's one of the valid types (Cardio, Calisthenics, Weightlifting)
 function normalizeWorkout(raw: WorkoutEntry & { workoutType?: string }): WorkoutEntry {
   const workoutType: WorkoutType =
     raw.workoutType === "Cardio" || raw.workoutType === "Calisthenics" || raw.workoutType === "Weightlifting"
@@ -54,23 +23,56 @@ function normalizeWorkout(raw: WorkoutEntry & { workoutType?: string }): Workout
   return { ...raw, workoutType };
 }
 
-// Gets the list of workouts from the device's local storage associated with WORKOUTS_KEY and parses the JSON string back into a JS array
+export async function saveProfile(profile: ProfileData): Promise<void> {
+  const uid = await requireUserId();
+  if (!uid) {
+    return;
+  }
+  await AsyncStorage.setItem(profileKey(uid), JSON.stringify(profile));
+}
+
+export async function getProfile(): Promise<ProfileData> {
+  const uid = await requireUserId();
+  if (!uid) {
+    return defaultProfile;
+  }
+  const raw = await AsyncStorage.getItem(profileKey(uid));
+  if (!raw) {
+    return defaultProfile;
+  }
+  try {
+    return migrateProfileFromStorage(JSON.parse(raw));
+  } catch {
+    return defaultProfile;
+  }
+}
+
 export async function getWorkouts(): Promise<WorkoutEntry[]> {
-  const raw = await AsyncStorage.getItem(WORKOUTS_KEY);
-  if (!raw) return [];
+  const uid = await requireUserId();
+  if (!uid) {
+    return [];
+  }
+  const raw = await AsyncStorage.getItem(workoutsKey(uid));
+  if (!raw) {
+    return [];
+  }
   try {
     const parsed = JSON.parse(raw) as WorkoutEntry[];
-    if (!Array.isArray(parsed)) return [];
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
     return parsed.map((w) => normalizeWorkout(w));
   } catch {
     return [];
   }
 }
 
-
-// Saves the list of workouts to the device's local storage associated with WORKOUTS_KEY and converts the JS array into a JSON string
 export async function saveWorkouts(workouts: WorkoutEntry[]): Promise<void> {
-  await AsyncStorage.setItem(WORKOUTS_KEY, JSON.stringify(workouts));
+  const uid = await requireUserId();
+  if (!uid) {
+    return;
+  }
+  await AsyncStorage.setItem(workoutsKey(uid), JSON.stringify(workouts));
 }
 
 export async function addWorkout(entry: WorkoutEntry): Promise<void> {
@@ -78,9 +80,20 @@ export async function addWorkout(entry: WorkoutEntry): Promise<void> {
   await saveWorkouts([entry, ...existing]);
 }
 
+export async function deleteWorkout(id: string): Promise<void> {
+  const existing = await getWorkouts();
+  await saveWorkouts(existing.filter((w) => w.id !== id));
+}
+
 export async function getMeals(): Promise<MealEntry[]> {
-  const raw = await AsyncStorage.getItem(MEALS_KEY);
-  if (!raw) return [];
+  const uid = await requireUserId();
+  if (!uid) {
+    return [];
+  }
+  const raw = await AsyncStorage.getItem(mealsKey(uid));
+  if (!raw) {
+    return [];
+  }
   try {
     const parsed = JSON.parse(raw) as MealEntry[];
     return Array.isArray(parsed) ? parsed : [];
@@ -90,10 +103,24 @@ export async function getMeals(): Promise<MealEntry[]> {
 }
 
 export async function saveMeals(meals: MealEntry[]): Promise<void> {
-  await AsyncStorage.setItem(MEALS_KEY, JSON.stringify(meals));
+  const uid = await requireUserId();
+  if (!uid) {
+    return;
+  }
+  await AsyncStorage.setItem(mealsKey(uid), JSON.stringify(meals));
 }
 
 export async function addMeal(entry: MealEntry): Promise<void> {
   const existing = await getMeals();
   await saveMeals([entry, ...existing]);
+}
+
+export async function updateMeal(entry: MealEntry): Promise<void> {
+  const existing = await getMeals();
+  await saveMeals(existing.map((m) => (m.id === entry.id ? entry : m)));
+}
+
+export async function deleteMeal(id: string): Promise<void> {
+  const existing = await getMeals();
+  await saveMeals(existing.filter((m) => m.id !== id));
 }

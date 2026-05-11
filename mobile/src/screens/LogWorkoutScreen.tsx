@@ -15,6 +15,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { addWorkout } from "../services/storage";
 import type { MainStackParamList } from "../navigation/types";
 import { WORKOUT_TYPES, type WorkoutEntry, type WorkoutType } from "../types/workout";
+import { noonLocalStoredIso } from "../utils/localDateIso";
 
 type Props = NativeStackScreenProps<MainStackParamList, "LogWorkout">;
 
@@ -25,12 +26,6 @@ function formatDate(d: Date): string {
     month: "short",
     day: "numeric",
   });
-}
-
-function dateToStoredIso(dateOnly: Date): string {
-  const d = new Date(dateOnly);
-  d.setHours(12, 0, 0, 0); // Normalizes the time to Noon (12:00:00) since we only care about the Day
-  return d.toISOString(); // Converts the date to a ISO string format for saving in AsyncStorage
 }
 
 export function LogWorkoutScreen({ navigation }: Props) {
@@ -76,7 +71,7 @@ export function LogWorkoutScreen({ navigation }: Props) {
     const entry: WorkoutEntry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       title: title.trim() || "Workout",
-      startedAt: dateToStoredIso(workoutDate),
+      startedAt: noonLocalStoredIso(workoutDate),
       durationMinutes,
       caloriesBurned,
       workoutType,

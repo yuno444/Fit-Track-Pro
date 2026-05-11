@@ -1,5 +1,7 @@
+.env
 node_modules
 .expo
 dist
+.expo-export-test
 npm-debug.*
 *.log

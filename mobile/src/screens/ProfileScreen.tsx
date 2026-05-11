@@ -63,25 +63,34 @@ export function ProfileScreen() {
             onChangeText={(value) => setProfile((prev) => ({ ...prev, age: value }))}
           />
 
+          <Text style={styles.label}>Weight (lb)</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="decimal-pad"
+            placeholder="175"
+            value={profile.weightLb}
+            onChangeText={(value) => setProfile((prev) => ({ ...prev, weightLb: value }))}
+          />
+
           <View style={styles.row}>
             <View style={styles.half}>
-              <Text style={styles.label}>Weight (kg)</Text>
+              <Text style={styles.label}>Height (ft)</Text>
               <TextInput
                 style={styles.input}
-                keyboardType="decimal-pad"
-                placeholder="70"
-                value={profile.weightKg}
-                onChangeText={(value) => setProfile((prev) => ({ ...prev, weightKg: value }))}
+                keyboardType="number-pad"
+                placeholder="5"
+                value={profile.heightFeet}
+                onChangeText={(value) => setProfile((prev) => ({ ...prev, heightFeet: value }))}
               />
             </View>
             <View style={styles.half}>
-              <Text style={styles.label}>Height (cm)</Text>
+              <Text style={styles.label}>Height (in)</Text>
               <TextInput
                 style={styles.input}
-                keyboardType="decimal-pad"
-                placeholder="175"
-                value={profile.heightCm}
-                onChangeText={(value) => setProfile((prev) => ({ ...prev, heightCm: value }))}
+                keyboardType="number-pad"
+                placeholder="10"
+                value={profile.heightInches}
+                onChangeText={(value) => setProfile((prev) => ({ ...prev, heightInches: value }))}
               />
             </View>
           </View>

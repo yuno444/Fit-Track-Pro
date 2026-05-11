@@ -6,12 +6,12 @@ Aligned with the Profile screen diagram found in the example diagrams folder (na
 
 | Field | Type | Notes |
 |-------|------|--------|
-| `fullName` | `String` | Display and identity in UI. |
-| `age` | `Int` | Years; validate range (e.g. 13–120) in UI layer. |
-| `weightKg` | `Double` | Canonical storage in kilograms; UI may show lb via conversion. |
-| `heightCm` | `Double` | Canonical storage in centimeters; UI may show ft/in via conversion. |
-| `fitnessGoal` | `FitnessGoal` | Enum; persisted as stable raw value (see below). |
-| `activityLevel` | `ActivityLevel` | Enum; used for TDEE/BMR-style targets when that feature is added. |
+| `fullName` | `String` |
+| `age` | `Int` |
+| `weightKg` | `Double` |
+| `heightCm` | `Double` |
+| `fitnessGoal` | `FitnessGoal` |
+| `activityLevel` | `ActivityLevel` |
 
 ## Enums
 

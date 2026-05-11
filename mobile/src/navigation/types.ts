@@ -1,3 +1,5 @@
+import type { LogMealPreset } from "../types/logMealPreset";
+
 export type MainTabsParamList = {
   Dashboard: undefined;
   Workouts: undefined;
@@ -5,8 +7,19 @@ export type MainTabsParamList = {
   Profile: undefined;
 };
 
+export type RecipeDetailParams =
+  | { source: "remote"; selfHref: string; title?: string }
+  | { source: "saved"; savedRecipeId: string };
+
 export type MainStackParamList = {
   MainTabs: undefined;
   LogWorkout: undefined;
-  LogMeal: undefined;
+  LogMeal: { preset?: LogMealPreset; editMealId?: string };
+  CreateWorkoutPlan: undefined;
+  WorkoutPlanDetail: { planId: string };
+  Pantry: undefined;
+  RecipeSearch: undefined;
+  SavedRecipes: undefined;
+  RecipeDetail: RecipeDetailParams;
+  EditSavedRecipe: { savedRecipeId: string };
 };
